@@ -1,0 +1,205 @@
+{
+    "Frequency": {
+        "name": "Frequency",
+        "params": {
+            "Start": {
+                "L": 30,
+                "H": 1800,
+                "D": 440
+            },
+            "Min": {
+                "L": 30,
+                "H": 1800,
+                "D": 30
+            },
+            "Max": {
+                "L": 30,
+                "H": 1800,
+                "D": 1800
+            },
+            "Slide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "DeltaSlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "RepeatSpeed": {
+                "L": 0,
+                "H": 3,
+                "D": 0
+            },
+            "ChangeAmount": {
+                "L": -12,
+                "H": 12,
+                "D": 0
+            },
+            "ChangeSpeed": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            }
+        },
+        "stage": 0
+    },
+    "Vibrato": {
+        "name": "Vibrato",
+        "params": {
+            "Depth": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            },
+            "DepthSlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "Frequency": {
+                "L": 0.01,
+                "H": 48,
+                "D": 0
+            },
+            "FrequencySlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            }
+        },
+        "stage": 10
+    },
+    "Generator": {
+        "name": "Generator",
+        "params": {
+            "Func": {
+                "C": {
+                    "string": {}
+                },
+                "D": "square"
+            },
+            "A": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            },
+            "B": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            },
+            "ASlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "BSlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            }
+        },
+        "stage": 20
+    },
+    "Guitar": {
+        "name": "Guitar",
+        "params": {
+            "A": {
+                "L": 0,
+                "H": 1,
+                "D": 1
+            },
+            "B": {
+                "L": 0,
+                "H": 1,
+                "D": 1
+            },
+            "C": {
+                "L": 0,
+                "H": 1,
+                "D": 1
+            }
+        },
+        "stage": 20
+    },
+    "Filter": {
+        "name": "Filter",
+        "params": {
+            "LP": {
+                "L": 0,
+                "H": 1,
+                "D": 1
+            },
+            "LPSlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "LPResonance": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            },
+            "HP": {
+                "L": 0,
+                "H": 1,
+                "D": 0
+            },
+            "HPSlide": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            }
+        },
+        "stage": 30
+    },
+    "Phaser": {
+        "name": "Phaser",
+        "params": {
+            "Offset": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            },
+            "Sweep": {
+                "L": -1,
+                "H": 1,
+                "D": 0
+            }
+        },
+        "stage": 31
+    },
+    "Volume": {
+        "name": "Volume",
+        "params": {
+            "Master": {
+                "L": 0,
+                "H": 1,
+                "D": 0.5
+            },
+            "Attack": {
+                "L": 0.001,
+                "H": 1,
+                "D": 0.01
+            },
+            "Sustain": {
+                "L": 0,
+                "H": 2,
+                "D": 0.3
+            },
+            "Punch": {
+                "L": 0,
+                "H": 3,
+                "D": 1
+            },
+            "Decay": {
+                "L": 0.001,
+                "H": 2,
+                "D": 1
+            }
+        },
+        "stage": 40
+    }
+}

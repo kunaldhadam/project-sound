@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Sound Generator Using MERN</title>
+    <script src="jsfx.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      "use strict";
+      var Library = {};
+      var CurrentParams = {};
+      
+      function PlayCurrent(){ Play(CurrentParams); }
+      
+      var PlayAudio = function(params){
+        var start = (new Date())|0;
+        jsfx.Sound(params).play();
+        var stop = (new Date())|0;
+        var time = (stop - start) + "ms"
+        console.log("Generated in", time);
+      };
+      var Play = PlayAudio;
+      
+      var PlayContext;
+
+      
+      function ChangePlayMode(){
+        Play = PlayAudio;
+      }
+      
+      function AddToLibrary(){
+        var name = prompt("Please enter name for the sound:");
+        if((name == null) || (name == "")){
+          return;
+        }
+      
+        var params = JSON.parse(JSON.stringify(CurrentParams));
+        jsfx._RemoveEmptyParams(params);
+      
+        Library[name] = params;
+        // UpdateHash();
+        UpdateCurrentView();
+      }
+      
+      function SelectPreset(preset){
+        CurrentParams = preset();
+        UpdateCurrentView();
+        PlayCurrent();
+      }
+      
+      var LastHash = "";
+      // function UpdateHash(){
+      //   var json = JSON.stringify(Library);
+      //   document.getElementById("library-content").value = json;
+      //   LastHash = "#" + btoa(json);
+      //   window.location.hash = LastHash;
+      // }
+      
+      // function LoadFromHash(){
+      //   var json = window.location.hash.substr(1);
+      //   try{
+      //     json = atob(json)
+      //     document.getElementById("library-content").value = json;
+      //     Library = JSON.parse(json);
+      //   }catch(e){ console.log(e); }
+      // }
+      
+      // if(window.location.hash != ""){ LoadFromHash(); }
+      // window.onhashchange = function(ev){
+      //   if(window.location.hash != LastHash){
+      //     LoadFromHash();
+      //     UpdateCurrentView();
+      //   }
+      // };
+      
+      function UpdateDownloadLink(){
+        var sound = jsfx.Sound(CurrentParams);
+        var el = document.getElementById("download");
+        el.href = sound.src;
+      }
+      
+      function UpdateCurrentView(){
+        // create a copy of params
+        var params = JSON.parse(JSON.stringify(CurrentParams));
+        jsfx.InitDefaultParams(params, jsfx.DefaultModules);
+      
+        list(params, function(moduleName, params){
+          list(params, function(paramName, paramValue){
+            var element = document.getElementById(moduleName + "$" + paramName);;
+            if(element){
+              element.value = paramValue;
+            }
+            var element = document.getElementById(moduleName + "_" + paramName + "_" + paramValue);
+            if(element){
+              element.checked = true;
+            }
+          });
+        });
+      
+        var library = document.getElementById("Library");
+        // library.innerHTML = "";
+        var els = list(Library, function(name, params){
+          var load  = E("button", "item-load", "#");
+          load.title = "Load";
+          load.onclick = function(){
+            CurrentParams = JSON.parse(JSON.stringify(params));
+            UpdateCurrentView();
+          };
+      
+          var del  = E("button", "item-delete", "X");
+          del.title = "Delete";
+          del.onclick = function(){
+            delete Library[name];
+            // UpdateHash();
+            UpdateCurrentView();
+          }
+      
+          var el = E("div", "library-item", [
+            load,
+            E("span", "item-name", name),
+            del
+          ]);
+          el.title = "play";
+          el.onclick = function(){
+            Play(params);
+          };
+          library.appendChild(el);
+        });
+      }
+      
+      // document.getElementById("library-content").click = function(ev){
+      //   ev.currentTarget.select();
+      // }
+      
+      function ModifyValue(moduleName, paramName, newValue){
+        // console.log("CHANGE", moduleName, paramName, newValue);
+        if(CurrentParams[moduleName] == null){
+          CurrentParams[moduleName] = {};
+        }
+        CurrentParams[moduleName][paramName] = newValue;
+        PlayCurrent();
+      }
+      
+      function CreateParam(name, def, module){
+        var sel;
+        if(def.C){
+          sel = E("form", "", list(def.C, function(value){
+            var input = E("input", "", []);
+            input.type = "radio";
+            input.id   = module.name + "_" + name + "_" + value;
+            input.name  = module.name + "_" + name;
+            input.value = value;
+            input.onchange = function(ev){
+              ModifyValue(module.name, name, input.value);
+            };
+      
+            var label = E("label", "", value);
+            label.htmlFor = input.id;
+            return E("span", "radio-option", [input, label]);
+          }));
+        } else {
+          sel = E("input", "", []);
+          sel.type = "range";
+          sel.min = def.L;
+          sel.max = def.H;
+          sel.value = def.D;
+          sel.step = 0.01;
+          sel.onchange = function(ev){
+            ModifyValue(module.name, name, parseFloat(sel.value));
+          };
+          if(def.H - def.L > 10){
+            sel.step = 1;
+          }
+        }
+        sel.id = module.name + "$" + name;
+      
+        return E("tr", "", [
+          E("td", "", name),
+          E("td", "", [sel])
+        ]);
+      }
+      
+      function CreatePanel(module){
+        return E("div", "panel", [
+          E("div", "panel-title", module.name),
+          E("table", "", list(module.params, CreateParam, module))
+        ]);
+      }
+      
+      // function Add(module){
+      //   document.getElementById("panels").appendChild(CreatePanel(module));
+      // }
+      
+      // Add(jsfx.Module.Generator);
+      // Add(jsfx.Module.Frequency);
+      // Add(jsfx.Module.Volume);
+      // Add(jsfx.Module.Vibrato);
+      // Add(jsfx.Module.Filter);
+      // Add(jsfx.Module.Phaser);
+      
+      // document.getElementById("panels").appendChild(E("div", "clear", []));
+      
+      // list(jsfx.Preset, function(name, preset){
+      //   var button = E("button", "", name);
+      //   button.onclick = function(){ SelectPreset(preset); };
+      //   document.getElementById("presets").appendChild(button);
+      // });
+      // document.getElementById("presets").appendChild(E("div", "clear", []));
+      
+      //element Function
+      function E(tag, className, content){
+        var el = document.createElement(tag);
+        if(className !== ''){
+          el.className = className;
+        }
+        if(typeof content == 'object'){
+          for(var i = 0; i < content.length; i += 1){
+            el.appendChild(content[i]);
+          }
+        } else if (typeof content == 'string'){
+          el.innerHTML = content;
+        }
+        return el;
+      }
+      
+      function list(obj, fn, X){
+        var r = [];
+        for(var name in obj){
+          if(obj.hasOwnProperty(name)){
+            r.push(fn(name, obj[name], X));
+          }
+        }
+        return r;
+      }
+      
+      UpdateCurrentView();
+    </script>
+  </body>
+</html>
