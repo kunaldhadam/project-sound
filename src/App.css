@@ -67,9 +67,16 @@
   margin-right:2vw;
   padding:10px 30px 10px;
 }
+.library-item{
+  margin-right: 8px;
+  width: 54vw;
+}
+.item-name{
+  margin: 3px;
+}
 .LibraryView{
   background-color: whitesmoke;
-  height: 46px;
+  height: fit-content;
   width: 55vw;
   margin: 0 23px 0;
   box-shadow: 1px 0 6px;
@@ -126,7 +133,8 @@
   padding: 6px;
 }
 #Library{
-  padding-left: 6px;
+  padding: 6px;
+  width: 55vw;
 }
 .radio-group{
   text-align: left;
@@ -152,4 +160,11 @@
   height: 80px;
   width: 97%;
   margin: 5px;
+}
+.item-delete{
+  float: right;
+}
+a{
+  text-decoration: none;
+  color: inherit;
 }

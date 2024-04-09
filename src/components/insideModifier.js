@@ -3,10 +3,42 @@ import '../../src/scripts/jsfx'
 import jsfx from '../../src/scripts/jsfx'
 
 
-export default function InsideModifier({title,list}) {
+function InsideModifier({title}) {
 
   const FuncList=['unoise','sine','saw','traingle','square','synth','noise','string']
 
+//initialize range Default values---------------------
+  const rangeArray = []
+  
+  const data = jsfx.Module[title]["params"]
+  for(const i in data){
+    if(data.hasOwnProperty(i) && data[i].hasOwnProperty('D')){
+      if(i === 'Func'){
+      }
+      else{
+        rangeArray.push(data[i].D)
+      }
+    }
+  }
+
+  const [rangeValues,setRangeValues] = useState(rangeArray);
+  
+  const handleChange = (index, newValue) => {
+    const newValues = [...rangeValues]; 
+    newValues[index] = newValue;
+    setRangeValues(newValues);
+    return newValues[index];
+  };
+
+  function givesNewObject(){
+    
+  }
+
+  function handleButtonClick(fn){
+    window.SelectPreset(fn)
+  }
+
+//------------------------------------------------------
   const paramslist = jsfx.Module[title]["params"]
   let chunks = [];
   for (let i = 0; i < FuncList.length; i += 2) {
@@ -20,41 +52,18 @@ export default function InsideModifier({title,list}) {
             <input 
             type='radio' style={{alignItems:'left'}} 
             name='fngroup' 
-            value={item}
+            value= {0}
+            id = {[title]+"_"+[item]+"_"}
             onChange={(ev)=>{
-              window.ModifyValue([title],[item],value)
-            }}/>
-            <label>{item}
+              window.ModifyValue(title,"Func",ev.target.value)
+            }}
+            />
+            <label for={[title]+"_"+[item]+"_"}>{item}
             </label>
             </td>
       ))}
     </tr>
   ));
-
-  const [value, setValue] = useState(0)
-
-  // useState(()=>{
-  //   const initialValues = {};
-  //   Object.keys(paramslist).forEach(item => {
-  //     initialValues[title]={
-  //       D: item.D
-  //     }
-      
-  //   });
-  //   setValue(initialValues);
-
-  // })
-
-  function handleChange(item,e){
-    setValue({
-      ...jsfx.Module[title]["params"],
-      [item]:{
-        ...jsfx.Module[title]["params"][item],
-        D: parseFloat(e.target.value)
-      }
-    })
-  }
-
   
   let listitem = Object.keys(paramslist).map((item,index)=>{
     if(item==="Func"){
@@ -85,18 +94,20 @@ export default function InsideModifier({title,list}) {
                 step={(paramslist[item].H - paramslist[item].L) > 10 ? 1 : 0.01} 
                 style={{width:170}} 
                 name={item}
-                value={value}
+                value={rangeValues[index]}
                 onChange={(ev)=>{
-                  window.ModifyValue({title: title}, {item: item}, setValue(parseFloat(ev.target.value)));
+                  window.ModifyValue(title, item, handleChange(index,parseFloat(ev.target.value)));
                 }}
                 >
               </input>
-              </td>
+            </td>
           </tr>
           );
+          
       }
     }
-})
+}
+)
 
   return (
     <div className='insideModifier'>
@@ -109,3 +120,6 @@ export default function InsideModifier({title,list}) {
     </div>
   )
 }
+
+export default InsideModifier
+

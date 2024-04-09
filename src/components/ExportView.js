@@ -1,5 +1,6 @@
 import React from 'react'
-import '../../src/scripts/jsfx'
+import * as ksfx from '../../src/scripts/jsfx'
+import SoundVisualizer from './SoundVisualizer'
 
 function WaveDisplay() {
   return (
@@ -13,7 +14,7 @@ function Controller(){
         <div className='Controller'>
           <table><tr>
           <td>
-          <div className='ControlButton'>
+          <div className='ControlButton' onClick={()=>window.AddToLibrary()}>
             <label>
             Add
             </label>
@@ -23,10 +24,11 @@ function Controller(){
             Play
             </label>
           </div></td><td>
-          <div className='ControlButton' id='download'>
+          <div className='ControlButton'>
+          <a className='Button' id='download' href='#' onMouseDown={()=>window.UpdateDownloadLink()} download={"sound.wav"}>
           <label>
             Download
-            </label>
+            </label></a>
           </div></td></tr>
           </table>
         </div>

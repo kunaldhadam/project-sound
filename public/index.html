@@ -20,12 +20,13 @@
       "use strict";
       var Library = {};
       var CurrentParams = {};
-      
+
       function PlayCurrent(){ Play(CurrentParams); }
       
       var PlayAudio = function(params){
         var start = (new Date())|0;
         jsfx.Sound(params).play();
+
         var stop = (new Date())|0;
         var time = (stop - start) + "ms"
         console.log("Generated in", time);
@@ -60,29 +61,29 @@
       }
       
       var LastHash = "";
-      // function UpdateHash(){
-      //   var json = JSON.stringify(Library);
-      //   document.getElementById("library-content").value = json;
-      //   LastHash = "#" + btoa(json);
-      //   window.location.hash = LastHash;
-      // }
+      function UpdateHash(){
+        var json = JSON.stringify(Library);
+        document.getElementById("Library").value = json;
+        LastHash = "#" + btoa(json);
+        window.location.hash = LastHash;
+      }
       
-      // function LoadFromHash(){
-      //   var json = window.location.hash.substr(1);
-      //   try{
-      //     json = atob(json)
-      //     document.getElementById("library-content").value = json;
-      //     Library = JSON.parse(json);
-      //   }catch(e){ console.log(e); }
-      // }
+      function LoadFromHash(){
+        var json = window.location.hash.substr(1);
+        try{
+          json = atob(json)
+          document.getElementById("Library").value = json;
+          Library = JSON.parse(json);
+        }catch(e){ console.log(e); }
+      }
       
-      // if(window.location.hash != ""){ LoadFromHash(); }
-      // window.onhashchange = function(ev){
-      //   if(window.location.hash != LastHash){
-      //     LoadFromHash();
-      //     UpdateCurrentView();
-      //   }
-      // };
+      if(window.location.hash != ""){ LoadFromHash(); }
+      window.onhashchange = function(ev){
+        if(window.location.hash != LastHash){
+          LoadFromHash();
+          UpdateCurrentView();
+        }
+      };
       
       function UpdateDownloadLink(){
         var sound = jsfx.Sound(CurrentParams);
@@ -109,7 +110,7 @@
         });
       
         var library = document.getElementById("Library");
-        // library.innerHTML = "";
+        library.innerHTML = "";
         var els = list(Library, function(name, params){
           var load  = E("button", "item-load", "#");
           load.title = "Load";
@@ -122,7 +123,7 @@
           del.title = "Delete";
           del.onclick = function(){
             delete Library[name];
-            // UpdateHash();
+            UpdateHash();
             UpdateCurrentView();
           }
       
@@ -148,6 +149,7 @@
         if(CurrentParams[moduleName] == null){
           CurrentParams[moduleName] = {};
         }
+        
         CurrentParams[moduleName][paramName] = newValue;
         PlayCurrent();
       }
